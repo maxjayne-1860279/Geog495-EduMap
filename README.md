@@ -14,22 +14,26 @@
 * [WA libraries](https://geo.wa.gov/datasets/f62ef46873bd4a80a31e3e88eafa43eb_0/explore)  
   
 ### Multimedia
-* [IMG - Garfield HS (Wikimedia Commons - Joe Mabel)](https://commons.wikimedia.org/wiki/File:Seattle_-_Garfield_High_School_03.jpg)
-* [IMG - Cleveland HS (Wikimedia Commons - Joe Mabel)](https://commons.wikimedia.org/wiki/File:Seattle_-_Cleveland_High_School_08A.jpg)
-* [IMG - Students learning (Wikimedia Commons - Seattle City Council)](https://commons.wikimedia.org/wiki/File:Amistad_School_Visit_(31401322123).jpg)
-* [IMG - Seattle public schools sign (Kiro7 News - Fair use TBD)](https://www.kiro7.com/news/local/seattle-public-schools-awarded-500-000-for-youth-safety-stopping-school-violence/999916371/)
+* [IMG - Garfield HS (Wikimedia Commons - Joe Mabel)](https://commons.wikimedia.org/wiki/File:Seattle_-_Garfield_High_School_03.jpg)  
+<img src="img/garfield.jpg" width="400"/>
+* [IMG - Cleveland HS (Wikimedia Commons - Joe Mabel)](https://commons.wikimedia.org/wiki/File:Seattle_-_Cleveland_High_School_08A.jpg)  
+<img src="img/cleveland.jpg" width="400"/>
+* [IMG - Students learning (Wikimedia Commons - Seattle City Council)](https://commons.wikimedia.org/wiki/File:Amistad_School_Visit_(31401322123).jpg)  
+<img src="img/students.jpg" width="400"/>
+* [IMG - Seattle public schools sign (Kiro7 News - Fair use TBD)](https://www.kiro7.com/news/local/seattle-public-schools-awarded-500-000-for-youth-safety-stopping-school-violence/999916371/)  
+<img src="img/sps.jpg" width="400"/>
   
 Additional photos of Seattle Schools can be taken in person for project use
   
 ### Related Projects
 * [2022-23 DC public schools interactive map](https://dme.dc.gov/node/1614161)  
-<img src="img/exampleDC.jpg" width="150"/>
+<img src="img/exampleDC.jpg" width="400"/>
 * [GreatSchools.org](https://www.greatschools.org/school-district-boundaries-map/)  
-<img src="img/exampleGS.jpg" width="150"/>
+<img src="img/exampleGS.jpg" width="400"/>
 * [Washington state schools explorer](https://k12wa.maps.arcgis.com/apps/webappviewer/index.html?id=7db7e443cd5c4f36a8355bc55cfb04c4)  
-<img src="img/exampleExplore.jpg" width="150"/>
+<img src="img/exampleExplore.jpg" width="400"/>
 * [NPR - spending per student](https://www.npr.org/2016/04/18/474256366/why-americas-schools-have-a-money-problem)  
-<img src="img/exampleSpending.jpg" width="150"/>
+<img src="img/exampleSpending.jpg" width="400"/>
 
 
 

@@ -1,6 +1,6 @@
 # Geography 495 Final Project - Mapping Education in Washington State
 
-*Group BB8: Trang Ha, Weilin Wang, Elliot Schumacher, Maxwell Jayne*
+*Group BB2: Trang Ha, Weilin Wang, Elliot Schumacher, Maxwell Jayne*
   
 &emsp;The primary focus of our project is education in WA state. The site we would like to develop would be a web-map of Washington schools using a geocoded search to identify schools near to a provided address. The resulting schools would be presented in a sorted list based off of distance from the provided address and would contain supplemental information such as spending. This map could contain multiple toggleable layers for additional analysis such as Washington school districts/counties/libraries. Since families are only interested in schools that their children may attend, we would allow the filtering of school level (elementary, middle, or high school) as well. We plan to do this by loading schools into a layer based on their school level. This will allow the user to toggle school level layers with a radial button. 
   

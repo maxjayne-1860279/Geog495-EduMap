@@ -14,12 +14,12 @@ h2, h3, p {
             .map-overlay {
                 position: absolute;
                 bottom: 0;
-                left: 0;
                 background: rgba(255, 255, 255, 0.8);
                 border-style: solid;
                 border-width: 1px;
                 border-color: rgba(0, 0, 0, 0.2);
                 margin-left: 20px;
+                margin-right: 20px;
                 font-family: Arial, sans-serif;
                 overflow: auto;
                 border-radius: 3px;
@@ -27,7 +27,8 @@ h2, h3, p {
 
             #intro {
                 top: 0;
-                height: 300px;
+                left: 0;
+                height: 800px;
                 margin-top: 20px;
                 width: 400px;
             }

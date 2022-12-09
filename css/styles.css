@@ -1,57 +1,152 @@
 h2, h3, p {
-                margin: 10px;
-            }
+    margin: 10px;
+}
 
-            #map {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                width: 100%;
-            }
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
 
-            .map-overlay {
-                position: absolute;
-                bottom: 0;
-                background: rgba(255, 255, 255, 0.8);
-                border-style: solid;
-                border-width: 1px;
-                border-color: rgba(0, 0, 0, 0.2);
-                margin-left: 20px;
-                margin-right: 20px;
-                font-family: Arial, sans-serif;
-                overflow: auto;
-                border-radius: 3px;
-            }
+.map-overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.2);
+    margin-left: 20px;
+    margin-right: 20px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 3px;
+}
 
-            #intro {
-                top: 0;
-                left: 0;
-                height: 800px;
-                margin-top: 20px;
-                width: 400px;
-            }
+#intro {
+    top: 0;
+    left: 0;
+    height: 800px;
+    margin-top: 20px;
+    width: 400px;
+}
 
-            #geocode {
-                top: 0;
-                right: 0;
-                height: 100px;
-                margin-top: 20px;
-                width: 250px;
-            }
+#geocode {
+    top: 0;
+    right: 0;
+    height: 100px;
+    margin-top: 20px;
+    width: 250px;
+}
 
-            .mapboxgl-canvas-container.mapboxgl-interactive,
-            .mapboxgl-ctrl-group button.mapboxgl-ctrl-compass {
-                cursor: unset;
-            }
+.mapboxgl-popup {
+    max-width: 200px;
+}
+  
+.mapboxgl-popup-content {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
 
-            @media screen and (max-width: 600px) {
-                #intro {
-                    max-width: 300px;
-                }
+.mapboxgl-canvas-container.mapboxgl-interactive,
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-compass {
+    cursor: unset;
+}
 
-                #geocode {
-                    max-width: 200px;
-                }
-            }
+.marker {
+    background-image: url('../img/library.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_elementry {
+    background-image: url('../img/elementary_school.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_middle {
+    background-image: url('../img/middle_school.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_high {
+    background-image: url('../img/high_school.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_pk12 {
+    background-image: url('../img/pk_12.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.marker_sc_k12 {
+    background-image: url('../img/k_12.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_other {
+    background-image: url('../img/other.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.marker_sc_pk {
+    background-image: url('../img/pk.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+.mapboxgl-ctrl-geocoder {
+    border-radius: 0;
+    position: relative;
+    top: 0;
+    width: 800px;
+    margin-top: 0;
+    border: 0;
+  }
+
+  .mapboxgl-ctrl-geocoder > div {
+    min-width: 100%;
+    margin-left: 0;
+  }
+
+@media screen and (max-width: 600px) {
+    #intro {
+        max-width: 300px;
+    }
+
+    #geocode {
+        max-width: 200px;
+    }
+}

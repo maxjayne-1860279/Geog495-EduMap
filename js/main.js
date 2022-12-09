@@ -44,7 +44,7 @@ const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       marker: true,
-      bbox: [-122.30932, 37.84214, -122.23715, 37.89838],
+      bbox: [-122.30932, 37.84213, -122.23712, 37.89824],
     });
     
     map.addControl(geocoder);

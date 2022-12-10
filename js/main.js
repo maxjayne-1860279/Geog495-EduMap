@@ -25,8 +25,25 @@ async function geojsonFetch() {
     library.properties.id = i;
   });
 
+  let elementarySchools = createGeoJson();
+  let middleSchools = createGeoJson();
+  let highSchools = createGeoJson();
+
   schools.features.forEach(function(sc, i) {
     sc.properties.id = i;
+    switch (sc.properties.Grades) {
+      case "Elementary School":
+        elementarySchools.features.push(sc);
+        break;
+      case "Middle School":
+        middleSchools.features.push(sc);
+        break;
+      case "High School":
+        highSchools.features.push(sc);
+        break;
+      default:
+        console.log(`school with id ${i} had an invalid grade: ${sc.properties.Grades}`);
+    }
   });
 
 map.on("load", function loadingData() {
@@ -113,3 +130,14 @@ const geocoder = new MapboxGeocoder({
   }
 }
 geojsonFetch();
+
+/**
+ * Creates a new GeoJSON FeatureCollection object.
+ * @returns an empty FeatureCollection GeoJSON object
+ */
+function createGeoJson() {
+  return {
+      "type": "FeatureCollection",
+      "features": []
+  }
+}

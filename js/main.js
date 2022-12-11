@@ -34,28 +34,7 @@ async function geojsonFetch() {
     (sc) => sc.properties.Grades === "High School"
   );
 
- /* // let elementarySchools = createGeoJson();
-  let middleSchools = createGeoJson();
-  let highSchools = createGeoJson();
-
-  schools.features.forEach(function(sc, i) {
-    sc.properties.id = i;
-    switch (sc.properties.Grades) {
-      case "Elementary School":
-        elementarySchools.features.push(sc);
-        break;
-      case "Middle School":
-        middleSchools.features.push(sc);
-        break;
-      case "High School":
-        highSchools.features.push(sc);
-        break;
-      default:
-        console.log(`school with id ${i} had an invalid grade: ${sc.properties.Grades}`);
-    }
-  });
-*/ 
-map.on("load", function loadingData() {
+  map.on("load", function loadingData() {
     map.addSource("libraries", {
       type: "geojson",
       data: libraries,
@@ -64,7 +43,7 @@ map.on("load", function loadingData() {
         type: "geojson",
         data: schools
     });
-const geocoder = new MapboxGeocoder({
+  const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       marker: true,
@@ -86,10 +65,10 @@ const geocoder = new MapboxGeocoder({
     );
     addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
-    map.addControl(geocoder);
+    map.addControl(geocoder, 'top-right');
     addMarkers(geocoder);
   });
-  function addSchoolLayer(id, source, imageUrl) {
+   function addSchoolLayer(id, source, imageUrl) {
     map.loadImage(imageUrl, (err, image) => {
       const imageCls = "image-class" + Math.floor(Math.random() * 1000);
       map.addImage(imageCls, image);
@@ -139,29 +118,76 @@ const geocoder = new MapboxGeocoder({
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
     }
-   /* for (const marker of schools.features) {
-        const el = document.createElement("div");
-        el.id = `marker-${marker.properties.id}`;
-        switch (marker.properties.Grades) {
-            case "Elementary School": el.className = "marker_sc_elementry"; break;
-            case "Middle School":el.className = "marker_sc_middle"; break;
-            case "High School": el.className = "marker_sc_high"; break;
-            case "PK-12": el.className = "marker_sc_pk12"; break;
-            case "K-12": el.className = "marker_sc_k12"; break;
-            case "Other": el.className = "marker_sc_other"; break;
-            case "PK Only": el.className = "marker_sc_pk"; break;
-            default: el.className = "marker_sc_elementry"; break;
+  geocoder.on("result", (event) => {
+    map.getSource("libraries").setData(event.result.geometry);
+    const searchResult = event.result.geometry;
+    const options = { units: 'miles' };
+    for (const library of libraries.features) {
+      library.properties.distance = turf.distance(
+      searchResult,
+      library.geometry,
+      options
+      );
+    }
+    libraries.features.sort((a, b) => {
+      if (a.properties.distance > b.properties.distance) {
+        return 1;
         }
-    new mapboxgl.Marker(el)
-        .setLngLat(marker.geometry.coordinates)
-        .addTo(map);
-      }
-*/
-    geocoder.on("result", (event) => {
-        map.getSource("libraries").setData(event.result.geometry);
+        if (a.properties.distance < b.properties.distance) {
+        return -1;
+        }
+        return 0;
     });
-  }
+    const listings = document.getElementById('listings');
+    while (listings.firstChild) {
+    listings.removeChild(listings.firstChild);
+    }
+    buildLocationList(libraries);
+    createPopUp(libraries.features[0]);
+    const activeListing = document.getElementById(
+      `listing-${libraries.features[0].properties.id}`
+      );
+      activeListing.classList.add('active');
+      const bbox = getBbox(libraries, 0, searchResult);
+      map.fitBounds(bbox, {
+      padding: 100
+    });
+  });
 }
+
+function getBbox(sortedLibraries, storeIdentifier, searchResult) {
+  const lats = [
+    sortedLibraries.features[storeIdentifier].geometry.coordinates[1],
+    searchResult.coordinates[1]
+  ];
+  const lons = [
+    sortedLibraries.features[storeIdentifier].geometry.coordinates[0],
+    searchResult.coordinates[0]
+  ];
+  const sortedLons = lons.sort((a, b) => {
+    if (a > b) {
+      return 1;
+    }
+    if (a.distance < b.distance) {
+      return -1;
+    }
+    return 0;
+  });
+  const sortedLats = lats.sort((a, b) => {
+    if (a > b) {
+      return 1;
+    }
+    if (a.distance < b.distance) {
+      return -1;
+    }
+    return 0;
+  });
+  return [
+    [sortedLons[0], sortedLats[0]],
+    [sortedLons[1], sortedLats[1]]
+  ];
+}
+
 geojsonFetch();
 /**
  * Creates a new GeoJSON FeatureCollection object.
@@ -172,4 +198,5 @@ function createGeoJson() {
       "type": "FeatureCollection",
       "features": []
   }
+}
 }

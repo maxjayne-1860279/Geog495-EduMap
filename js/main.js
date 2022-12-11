@@ -23,9 +23,7 @@ async function geojsonFetch() {
 
   libraries.features.forEach(function (library, i) {
     library.properties.id = i;
-  });
-
-  
+  });  
   let elementarySchools = schools.features.filter(
     (sc) => sc.properties.Grades === "Elementary School"
   );
@@ -35,8 +33,6 @@ async function geojsonFetch() {
   let highSchools = schools.features.filter(
     (sc) => sc.properties.Grades === "High School"
   );
-
-
 
  /* // let elementarySchools = createGeoJson();
   let middleSchools = createGeoJson();
@@ -59,25 +55,21 @@ async function geojsonFetch() {
     }
   });
 */ 
-
 map.on("load", function loadingData() {
     map.addSource("libraries", {
       type: "geojson",
       data: libraries,
     });
-
     map.addSource("schools", {
         type: "geojson",
         data: schools
     });
-
 const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       marker: true,
       bbox: [-122.30932, 37.84213, -122.23712, 37.89824],
     });
-
     map.addSource("elementry-sc", {
       type: "geojson",
       data: { type: "FeatureCollection", features: elementarySchools },
@@ -90,16 +82,13 @@ const geocoder = new MapboxGeocoder({
       type: "geojson",
       data: { type: "FeatureCollection", features: highSchools },
     });
-
     addSchoolLayer("elementry-sc-layer", "elementry-sc", "../img/elementary_school.png"
     );
     addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
-
     map.addControl(geocoder);
     addMarkers(geocoder);
   });
-
   function addSchoolLayer(id, source, imageUrl) {
     map.loadImage(imageUrl, (err, image) => {
       const imageCls = "image-class" + Math.floor(Math.random() * 1000);
@@ -141,7 +130,6 @@ const geocoder = new MapboxGeocoder({
       "line-opacity": 0.4,
     },
   });
-
   function addMarkers(geocoder) {
     for (const marker of libraries.features) {
       const el = document.createElement("div");
@@ -151,7 +139,6 @@ const geocoder = new MapboxGeocoder({
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
     }
-
    /* for (const marker of schools.features) {
         const el = document.createElement("div");
         el.id = `marker-${marker.properties.id}`;
@@ -165,7 +152,6 @@ const geocoder = new MapboxGeocoder({
             case "PK Only": el.className = "marker_sc_pk"; break;
             default: el.className = "marker_sc_elementry"; break;
         }
-    
     new mapboxgl.Marker(el)
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
@@ -177,7 +163,6 @@ const geocoder = new MapboxGeocoder({
   }
 }
 geojsonFetch();
-
 /**
  * Creates a new GeoJSON FeatureCollection object.
  * @returns an empty FeatureCollection GeoJSON object

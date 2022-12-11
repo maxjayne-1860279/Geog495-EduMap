@@ -25,7 +25,20 @@ async function geojsonFetch() {
     library.properties.id = i;
   });
 
-  let elementarySchools = createGeoJson();
+  
+  let elementarySchools = schools.features.filter(
+    (sc) => sc.properties.Grades === "Elementary School"
+  );
+  let middleSchools = schools.features.filter(
+    (sc) => sc.properties.Grades === "Middle School"
+  );
+  let highSchools = schools.features.filter(
+    (sc) => sc.properties.Grades === "High School"
+  );
+
+
+
+ /* // let elementarySchools = createGeoJson();
   let middleSchools = createGeoJson();
   let highSchools = createGeoJson();
 
@@ -45,6 +58,7 @@ async function geojsonFetch() {
         console.log(`school with id ${i} had an invalid grade: ${sc.properties.Grades}`);
     }
   });
+*/ 
 
 map.on("load", function loadingData() {
     map.addSource("libraries", {
@@ -63,11 +77,44 @@ const geocoder = new MapboxGeocoder({
       marker: true,
       bbox: [-122.30932, 37.84213, -122.23712, 37.89824],
     });
-    
+
+    map.addSource("elementry-sc", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: elementarySchools },
+    });
+    map.addSource("middle-sc", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: middleSchools },
+    });
+    map.addSource("high-sc", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: highSchools },
+    });
+
+    addSchoolLayer("elementry-sc-layer", "elementry-sc", "../img/elementary_school.png"
+    );
+    addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
+    addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
+
     map.addControl(geocoder);
     addMarkers(geocoder);
-
   });
+
+  function addSchoolLayer(id, source, imageUrl) {
+    map.loadImage(imageUrl, (err, image) => {
+      const imageCls = "image-class" + Math.floor(Math.random() * 1000);
+      map.addImage(imageCls, image);
+      map.addLayer({
+        id: id,
+        type: "symbol",
+        source: source,
+        layout: {
+          "icon-image": imageCls,
+          "icon-size": 0.03,
+        },
+      });
+    });
+  }
   map.addSource("counties", {
     type: "geojson",
     data: counties,
@@ -105,7 +152,7 @@ const geocoder = new MapboxGeocoder({
         .addTo(map);
     }
 
-    for (const marker of schools.features) {
+   /* for (const marker of schools.features) {
         const el = document.createElement("div");
         el.id = `marker-${marker.properties.id}`;
         switch (marker.properties.Grades) {
@@ -123,7 +170,7 @@ const geocoder = new MapboxGeocoder({
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
       }
-
+*/
     geocoder.on("result", (event) => {
         map.getSource("libraries").setData(event.result.geometry);
     });

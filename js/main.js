@@ -47,7 +47,7 @@ async function geojsonFetch() {
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       marker: true,
-      bbox: [-122.30932, 37.84213, -122.23712, 37.89824],
+      bbox: [-120.740135, 47.751076, -122.30932, 47.84213],
     });
     map.addSource("elementry-sc", {
       type: "geojson",
@@ -131,7 +131,22 @@ async function geojsonFetch() {
       new mapboxgl.Marker(el, { offset: [0, -23] })
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
+      el.addEventListener('click', (e) => {
+        flyToSchool(marker);
+        createPopUp(marker);
+        const activeItem = document.getElementsByClassName('active');
+        e.stopPropagation();
+        if (activeItem[0]) {
+          activeItem[0].classList.remove('active');
+        }
+        const listing = document.getElementById(
+          `listing-${marker.properties.id}`
+        );
+        listing.classList.add('active');
+      });
     }
+  }
+
   geocoder.on("result", (event) => {
     map.getSource("libraries").setData(event.result.geometry);
     const searchResult = event.result.geometry;
@@ -284,6 +299,4 @@ function createPopUp(currentFeature) {
   .setLngLat(currentFeature.geometry.coordinates)
   .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
   .addTo(map);
-}
-
 }

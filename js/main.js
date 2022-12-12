@@ -109,6 +109,20 @@ async function geojsonFetch() {
       "line-opacity": 0.4,
     },
   });
+
+  let currentFeature;
+  if (bool) { //insert boolean updater here for active library button? or upate directly with event listeners? prob the latter
+    currentFeature = libraries;
+  } else {
+    if (bool2) {
+        currentFeature = elementary-sc;
+    } else if (bool3) {
+        currentFeature = middle-sc;
+    } else {
+        currentFeature = high-sc;
+    }
+  }
+
   function addMarkers(geocoder) {
     for (const marker of libraries.features) {
       const el = document.createElement("div");
@@ -199,4 +213,77 @@ function createGeoJson() {
       "features": []
   }
 }
+
+function buildLocationList(currentFeature) {
+  for (const currentFeature of currentFeature.features) {
+
+      /* Add a new listing section to the sidebar. */
+      const listings = document.getElementById('listings');
+      const listing = listings.appendChild(document.createElement('div'));
+
+      /* Assign a unique `id` to the listing. */
+      listing.id = `listing-${currentFeature.properties.id}`;
+
+      /* Assign the `item` class to each listing for styling. */
+      listing.className = 'item';
+      
+      /* Add the link to the individual listing created above. */
+      const link = listing.appendChild(document.createElement('a'));
+      link.href = '#';
+      link.className = 'title';
+      link.id = `link-${currentFeature.properties.id}`;
+      link.innerHTML = `${currentFeature.properties.Name}`;
+      
+      /* Add details to the individual listing. */
+      const details = listing.appendChild(document.createElement('div'));
+      details.innerHTML = `${currentFeature.properties.Address}`;
+      if (currentFeature.properties.Phone) {
+          details.innerHTML += ` &middot; ${currentFeature.properties.Phone}`;
+      }
+      if (currentFeature.properties.distance) {
+          const roundedDistance =
+          Math.round(currentFeature.properties.distance * 100) / 100;
+          details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
+      }
+   
+      /**
+      * Listen to the element and when it is clicked, do four things:
+      * 1. Update the `currentFeature` to the store associated with the clicked link
+      * 2. Fly to the point
+      * 3. Close all other popups and display popup for clicked store
+      * 4. Highlight listing in sidebar (and remove highlight for all other listings)
+      **/
+      link.addEventListener('click', function () {
+          for (const feature of currentFeature.features) {
+              if (this.id === `link-${feature.properties.id}`) {
+                  flyToSchool(feature);
+                  createPopUp(feature);
+              }
+          }
+          const activeItem = document.getElementsByClassName('active');
+          if (activeItem[0]) {
+              activeItem[0].classList.remove('active');
+          }
+          this.parentNode.classList.add('active');
+      });
+  }
+}
+
+function flyToSchool(currentFeature) {
+  map.flyTo({
+  center: currentFeature.geometry.coordinates,
+  zoom: 15
+  });
+}
+
+function createPopUp(currentFeature) {
+  const popUps = document.getElementsByClassName('mapboxgl-popup');
+  if (popUps[0]) popUps[0].remove();
+   
+  const popup = new mapboxgl.Popup({ closeOnClick: false })
+  .setLngLat(currentFeature.geometry.coordinates)
+  .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
+  .addTo(map);
+}
+
 }

@@ -38,10 +38,7 @@ async function geojsonFetch() {
   );
 
   map.on("load", function loadingData() {
-    map.addSource("libraries", {
-      type: "geojson",
-      data: libraries,
-    });
+
     map.addSource("schools", {
         type: "geojson",
         data: schools
@@ -59,8 +56,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: { type: "FeatureCollection", features: highSchools },
     });
-    addSchoolLayer("elementry-sc-layer", "elementry-sc", "../img/elementary_school.png"
-    );
+    addSchoolLayer("elementry-sc-layer", "elementry-sc", "../img/elementary_school.png");
     addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
     map.addControl(geocoder, 'top-right');
@@ -95,13 +91,11 @@ async function geojsonFetch() {
         `listing-${currentFeature.features[0].properties.id}`
         );
         activeListing.classList.add('active');
-        const bbox = getBbox(currentFeature, 0, searchResult);
-        map.fitBounds(bbox, {
-        padding: 100
-      });
+        // const bbox = getBbox(currentFeature, 0, searchResult);
+        // map.fitBounds(bbox, {
+        // padding: 100
+        // });
     });
-
-    addMarkers(schools, geocoder);
   });
 
    function addSchoolLayer(id, source, imageUrl) {
@@ -150,17 +144,28 @@ async function geojsonFetch() {
     },
   });
 
+  map.addSource("libraries", {
+    type: "geojson",
+    data: libraries,
+  });
+
+  map.addLayer({
+    id: "libraries-layer",
+    type: "point",
+    source: "libraries",
+  });
+
   // Menu and sub menu compile on idle and respond to user event trigger:
   //
   // After the last frame rendered before the map enters an "idle" state.
   map.on('idle', () => {
     // If these two layers were not added to the map, abort
-    if (!map.getLayer('schools') || !map.getLayer('libraries')) {
+    if (!map.getLayer('elementarySchools') || !map.getLayer('middleSchools') || !map.getLayer('highSchools') || !map.getLayer('libraries')) {
         return;
     }
 
     // Enumerate ids of the layers.
-    const toggleableLayerIds = ['schools', 'libraries'];
+    const toggleableLayerIds = ['elementarySchools', 'middleSchools', 'highSchools', 'libraries'];
 
     // Set up the corresponding toggle button for each layer.
     for (const id of toggleableLayerIds) {
@@ -206,76 +211,6 @@ async function geojsonFetch() {
                     'visible'
                 );
             }
-            if (clickedLayer === map.getLayer('schools')) {
-              addMarkers(schools, geocoder);
-              if (!map.getLayer('elementarySchools') || !map.getLayer('middleSchools') || !map.getLayer('highSchools')) {
-                return;
-              }
-        
-              // Enumerate ids of the layers.
-              const toggleableLayerIds2 = ['elementarySchools', 'middleSchools', 'highSchools'];
-        
-              // Set up the corresponding toggle button for each layer.
-              for (const id of toggleableLayerIds2) {
-                // Skip layers that already have a button set up.
-                if (document.getElementById(id)) {
-                    continue;
-                }
-        
-                // Create a link.
-                const link2 = document.createElement('a');
-                link2.id = id;
-                link2.href = '#';
-                link2.textContent = id;
-                link2.className = 'inactive';
-        
-                // Show or hide layer when the toggle is clicked.
-                link2.onclick = function (e) {
-                    const clickedLayer2 = this.textContent;
-                    // preventDefault() tells the user agent that if the event does not get explicitly handled, 
-                    // its default action should not be taken as it normally would be.
-                    e.preventDefault();
-                    // The stopPropagation() method prevents further propagation of the current event in the capturing 
-                    // and bubbling phases. It does not, however, prevent any default behaviors from occurring; 
-                    // for instance, clicks on links are still processed. If you want to stop those behaviors, 
-                    // see the preventDefault() method.
-                    e.stopPropagation();
-        
-                    const visibility2 = map.getLayoutProperty(
-                        clickedLayer2,
-                        'visibility'
-                    );
-        
-                    // Toggle layer visibility by changing the layout object's visibility property.
-                    // if it is currently visible, after the clicking, it will be turned off.
-                    if (visibility2 === 'visible') {
-                        map.setLayoutProperty(clickedLayer2, 'visibility', 'none');
-                        this.className = '';
-                    } else { //otherise, it will be turned on.
-                        this.className = 'active';
-                        map.setLayoutProperty(
-                            clickedLayer2,
-                            'visibility',
-                            'visible'
-                        );
-                    }
-
-                    if (clickedLayer2 === map.getLayer('elementarySchools')) {
-                      addMarkers(elementarySchools, geocoder);
-                    } else if (clickedLayer === map.getLayer('middleSchools')) {
-                      addMarkers(middleSchools, geocoder);
-                    } else {
-                      addMarkers(highSchools, geocoder);
-                    }
-                };
-        
-                // in the menu place holder, insert the layer links.
-                const layers2 = document.getElementById('sub-menu');
-                layers2.appendChild(link2);
-              }
-            } else {
-              addMarkers(libraries, geocoder);
-            }
         };
 
         // in the menu place holder, insert the layer links.
@@ -287,62 +222,62 @@ async function geojsonFetch() {
   let currentFeature = document.getElementsByClassName('active');
 }
 
-function addMarkers(currLayer, geocoder) {
-  for (const marker of currLayer.features) {
-    const el = document.createElement("div");
-    el.id = `marker-${marker.properties.id}`;
-    el.className = "marker";
-    new mapboxgl.Marker(el, { offset: [0, -23] })
-      .setLngLat(marker.geometry.coordinates)
-      .addTo(map);
-    el.addEventListener('click', (e) => {
-      flyToSchool(marker);
-      createPopUp(marker);
-      const activeItem = document.getElementsByClassName('active');
-      e.stopPropagation();
-      if (activeItem[0]) {
-        activeItem[0].classList.remove('active');
-      }
-      const listing = document.getElementById(
-        `listing-${marker.properties.id}`
-      );
-      listing.classList.add('active');
-    });
-  }
-}
+//  function addMarkers(currLayer, geocoder) {
+//    for (const marker of currLayer.features) {
+//      const el = document.createElement("div");
+//      el.id = `marker-${marker.properties.id}`;
+//      el.className = "marker";
+//      new mapboxgl.Marker(el, { offset: [0, -23] })
+//        .setLngLat(marker.geometry.coordinates)
+//        .addTo(map);
+//      el.addEventListener('click', (e) => {
+//        flyToSchool(marker);
+//        createPopUp(marker);
+//        const activeItem = document.getElementsByClassName('active');
+//        e.stopPropagation();
+//        if (activeItem[0]) {
+//          activeItem[0].classList.remove('active');
+//       }
+//        const listing = document.getElementById(
+//          `listing-${marker.properties.id}`
+//       );
+//      listing.classList.add('active');
+//      });
+//    }
+//  }
 
-function getBbox(sortedFeats, storeIdentifier, searchResult) {
-  const lats = [
-    sortedFeats.features[storeIdentifier].geometry.coordinates[1],
-    searchResult.coordinates[1]
-  ];
-  const lons = [
-    sortedFeats.features[storeIdentifier].geometry.coordinates[0],
-    searchResult.coordinates[0]
-  ];
-  const sortedLons = lons.sort((a, b) => {
-    if (a > b) {
-      return 1;
-    }
-    if (a.distance < b.distance) {
-      return -1;
-    }
-    return 0;
-  });
-  const sortedLats = lats.sort((a, b) => {
-    if (a > b) {
-      return 1;
-    }
-    if (a.distance < b.distance) {
-      return -1;
-    }
-    return 0;
-  });
-  return [
-    [sortedLons[0], sortedLats[0]],
-    [sortedLons[1], sortedLats[1]]
-  ];
-}
+//  function getBbox(sortedFeats, storeIdentifier, searchResult) {
+//    const lats = [
+//      sortedFeats.features[storeIdentifier].geometry.coordinates[1],
+//      searchResult.coordinates[1]
+//    ];
+//    const lons = [
+//      sortedFeats.features[storeIdentifier].geometry.coordinates[0],
+//      searchResult.coordinates[0]
+//    ];
+//    const sortedLons = lons.sort((a, b) => {
+//      if (a > b) {
+//        return 1;
+//      }
+//      if (a.distance < b.distance) {
+//        return -1;
+//      }
+//      return 0;
+//    });
+//    const sortedLats = lats.sort((a, b) => {
+//      if (a > b) {
+//        return 1;
+//      }
+//      if (a.distance < b.distance) {
+//        return -1;
+//      }
+//      return 0;
+//   });
+//    return [
+//      [sortedLons[0], sortedLats[0]],
+//      [sortedLons[1], sortedLats[1]]
+//    ];
+//  }
 
 geojsonFetch();
 /**

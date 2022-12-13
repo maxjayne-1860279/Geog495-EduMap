@@ -10,7 +10,7 @@ const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   mapboxgl: mapboxgl,
   marker: true,
-  bbox: [-116.708878, 45.481431, -124.915070, 49.049332],
+  bbox: [-124.915070, 45.481431, -116.708878 , 49.049332],
 });
 
 async function geojsonFetch() {

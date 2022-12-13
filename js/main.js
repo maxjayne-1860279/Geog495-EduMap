@@ -6,9 +6,12 @@ const map = new mapboxgl.Map({
   center: [-122, 47],
 });
 
-const marker = new mapboxgl.Marker()
-  .setLngLat([-122.25948, 47.87221])
-  .addTo(map);
+const geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl,
+  marker: true,
+  bbox: [-116.708878, 45.481431, -124.915070, 49.049332],
+});
 
 async function geojsonFetch() {
   let response, counties, districts, libraries, schools;
@@ -43,12 +46,7 @@ async function geojsonFetch() {
         type: "geojson",
         data: schools
     });
-  const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-      marker: true,
-      bbox: [-120.740135, 47.751076, -122.30932, 47.84213],
-    });
+
     map.addSource("elementry-sc", {
       type: "geojson",
       data: { type: "FeatureCollection", features: elementarySchools },
@@ -168,12 +166,12 @@ async function geojsonFetch() {
             }
             if (clickedLayer === schools) {
               addMarkers(schools, geocoder);
-              if (!map.getLayer('elementary') || !map.getLayer('middle') || !map.getLayer('high')) {
+              if (!map.getLayer('elementarySchools') || !map.getLayer('middleSchools') || !map.getLayer('highSchools')) {
                 return;
               }
         
               // Enumerate ids of the layers.
-              const toggleableLayerIds2 = ['elementary', 'middle', 'high'];
+              const toggleableLayerIds2 = ['elementarySchools', 'middleSchools', 'highSchools'];
         
               // Set up the corresponding toggle button for each layer.
               for (const id of toggleableLayerIds2) {
@@ -220,12 +218,12 @@ async function geojsonFetch() {
                         );
                     }
 
-                    if (clickedLayer2 === elementary) {
-                      addMarkers(elementary, geocoder);
-                    } else if (clickedLayer === middle) {
-                      addMarkers(middle, geocoder);
+                    if (clickedLayer2 === elementarySchools) {
+                      addMarkers(elementarySchools, geocoder);
+                    } else if (clickedLayer === middleSchools) {
+                      addMarkers(middleSchools, geocoder);
                     } else {
-                      addMarkers(high, geocoder);
+                      addMarkers(highSchools, geocoder);
                     }
                 };
         

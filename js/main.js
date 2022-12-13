@@ -382,3 +382,4 @@ function createPopUp(currentFeature) {
   .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
   .addTo(map);
 }
+}

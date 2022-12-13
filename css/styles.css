@@ -1,37 +1,83 @@
-h2, h3, p {
-    margin: 10px;
+body {
+    top: 0px;;
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+}
+
+header {
+    top: 0px;
+    height: 80px;
+    background-color: #2D0D6B;
+}
+
+header, #user-inputs {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+}
+
+h1 {
+    color: white;
+    /* margin: 0px 0px 0px 24px; */
+    font-size: 60px;
+}
+
+h1 > span {
+    color: #E1C69E;
+}
+
+h3 {
+    margin: 0px;
+}
+
+#user-inputs {
+    height: 80px;
+    width: 100%
+}
+
+#input-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+#radio-buttons {
+    display: flex;
+    
 }
 
 #map {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 160px;
+    bottom: 0px;
     width: 100%;
 }
 
 .map-overlay {
     position: absolute;
+    top: 160px;
+    left: 0px;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    width: 550px;
+    background: #EDEDED;
     border-style: solid;
     border-width: 1px;
     border-color: rgba(0, 0, 0, 0.2);
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
     font-family: Arial, sans-serif;
     overflow: auto;
     border-radius: 3px;
 }
 
-#intro {
+/* #intro {
     top: 0;
     left: 0;
     height: 800px;
     margin-top: 20px;
     width: 400px;
-}
+} */
 
 /* the style of the layer control menu */
 #menu {

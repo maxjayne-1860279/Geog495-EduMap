@@ -21,14 +21,19 @@
             <h1>Education<span>Finder</span></h1>
         </header>
         <section id="user-inputs">
-            <label for="layer-choice-1">Elementary</label>
-            <input type="radio" id="layer-choice-1" name="layer" value="elementary">
-            <label for="layer-choice-2">middle</label>
-            <input type="radio" id="layer-choice-2" name="layer" value="middle">
-            <label for="layer-choice-3">high</label>
-            <input type="radio" id="layer-choice-3" name="layer" value="high">
-            <label for="layer-choice-4">library</label>
-            <input type="radio" id="layer-choice-4" name="layer" value="library">
+            <div id="input-item">
+                <h3>Pick a layer</h3>
+                <div id="radio-buttons">
+                    <label for="layer-choice-1">Elementary</label>
+                    <input type="radio" id="layer-choice-1" name="layer" value="elementary">
+                    <label for="layer-choice-2">middle</label>
+                    <input type="radio" id="layer-choice-2" name="layer" value="middle">
+                    <label for="layer-choice-3">high</label>
+                    <input type="radio" id="layer-choice-3" name="layer" value="high">
+                    <label for="layer-choice-4">library</label>
+                    <input type="radio" id="layer-choice-4" name="layer" value="library">
+                </div>
+            </div>
         </section>
         <div id="map"></div>
 
@@ -36,7 +41,7 @@
             <!--Insert heading and layer toggles here-->
             <nav id="menu"></nav>
             <div class="heading">
-                <h1>Distance Search Results</h1>
+                <h2>Distance Search Results</h2>
             </div>
             <div id="listings" class="listings"></div>
         </div>

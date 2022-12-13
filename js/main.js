@@ -64,8 +64,46 @@ async function geojsonFetch() {
     addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
     map.addControl(geocoder, 'top-right');
+
+    geocoder.on("result", (event) => {
+      map.getSource(currentFeature).setData(event.result.geometry);
+      const searchResult = event.result.geometry;
+      const options = { units: 'miles' };
+      for (const feature of currentFeature.features) {
+        feature.properties.distance = turf.distance(
+        searchResult,
+        feature.geometry,
+        options
+        );
+      }
+      currentFeature.features.sort((a, b) => {
+        if (a.properties.distance > b.properties.distance) {
+          return 1;
+          }
+          if (a.properties.distance < b.properties.distance) {
+          return -1;
+          }
+          return 0;
+      });
+      const listings = document.getElementById('listings');
+      while (listings.firstChild) {
+      listings.removeChild(listings.firstChild);
+      }
+      buildLocationList(currentFeature);
+      createPopUp(currentFeature.features[0]);
+      const activeListing = document.getElementById(
+        `listing-${currentFeature.features[0].properties.id}`
+        );
+        activeListing.classList.add('active');
+        const bbox = getBbox(currentFeature, 0, searchResult);
+        map.fitBounds(bbox, {
+        padding: 100
+      });
+    });
+
     addMarkers(schools, geocoder);
   });
+
    function addSchoolLayer(id, source, imageUrl) {
     map.loadImage(imageUrl, (err, image) => {
       const imageCls = "image-class" + Math.floor(Math.random() * 1000);
@@ -81,10 +119,12 @@ async function geojsonFetch() {
       });
     });
   }
+
   map.addSource("counties", {
     type: "geojson",
     data: counties,
   });
+
   map.addLayer({
     id: "counties-layer",
     type: "line",
@@ -94,10 +134,12 @@ async function geojsonFetch() {
       "line-opacity": 1,
     },
   });
+
   map.addSource("districts", {
     type: "geojson",
     data: districts,
   });
+
   map.addLayer({
     id: "districts-layer",
     type: "line",
@@ -164,7 +206,7 @@ async function geojsonFetch() {
                     'visible'
                 );
             }
-            if (clickedLayer === schools) {
+            if (clickedLayer === map.getLayer('schools')) {
               addMarkers(schools, geocoder);
               if (!map.getLayer('elementarySchools') || !map.getLayer('middleSchools') || !map.getLayer('highSchools')) {
                 return;
@@ -218,9 +260,9 @@ async function geojsonFetch() {
                         );
                     }
 
-                    if (clickedLayer2 === elementarySchools) {
+                    if (clickedLayer2 === map.getLayer('elementarySchools')) {
                       addMarkers(elementarySchools, geocoder);
-                    } else if (clickedLayer === middleSchools) {
+                    } else if (clickedLayer === map.getLayer('middleSchools')) {
                       addMarkers(middleSchools, geocoder);
                     } else {
                       addMarkers(highSchools, geocoder);
@@ -242,67 +284,31 @@ async function geojsonFetch() {
       }
   });
 
-  function addMarkers(currLayer, geocoder) {
-    for (const marker of currLayer.features) {
-      const el = document.createElement("div");
-      el.id = `marker-${marker.properties.id}`;
-      el.className = "marker";
-      new mapboxgl.Marker(el, { offset: [0, -23] })
-        .setLngLat(marker.geometry.coordinates)
-        .addTo(map);
-      el.addEventListener('click', (e) => {
-        flyToSchool(marker);
-        createPopUp(marker);
-        const activeItem = document.getElementsByClassName('active');
-        e.stopPropagation();
-        if (activeItem[0]) {
-          activeItem[0].classList.remove('active');
-        }
-        const listing = document.getElementById(
-          `listing-${marker.properties.id}`
-        );
-        listing.classList.add('active');
-      });
-    }
-  }
-
   let currentFeature = document.getElementsByClassName('active');
+}
 
-  geocoder.on("result", (event) => {
-    map.getSource(currentFeature).setData(event.result.geometry);
-    const searchResult = event.result.geometry;
-    const options = { units: 'miles' };
-    for (const feature of currentFeature.features) {
-      feature.properties.distance = turf.distance(
-      searchResult,
-      feature.geometry,
-      options
+function addMarkers(currLayer, geocoder) {
+  for (const marker of currLayer.features) {
+    const el = document.createElement("div");
+    el.id = `marker-${marker.properties.id}`;
+    el.className = "marker";
+    new mapboxgl.Marker(el, { offset: [0, -23] })
+      .setLngLat(marker.geometry.coordinates)
+      .addTo(map);
+    el.addEventListener('click', (e) => {
+      flyToSchool(marker);
+      createPopUp(marker);
+      const activeItem = document.getElementsByClassName('active');
+      e.stopPropagation();
+      if (activeItem[0]) {
+        activeItem[0].classList.remove('active');
+      }
+      const listing = document.getElementById(
+        `listing-${marker.properties.id}`
       );
-    }
-    currentFeature.features.sort((a, b) => {
-      if (a.properties.distance > b.properties.distance) {
-        return 1;
-        }
-        if (a.properties.distance < b.properties.distance) {
-        return -1;
-        }
-        return 0;
+      listing.classList.add('active');
     });
-    const listings = document.getElementById('listings');
-    while (listings.firstChild) {
-    listings.removeChild(listings.firstChild);
-    }
-    buildLocationList(currentFeature);
-    createPopUp(currentFeature.features[0]);
-    const activeListing = document.getElementById(
-      `listing-${currentFeature.features[0].properties.id}`
-      );
-      activeListing.classList.add('active');
-      const bbox = getBbox(currentFeature, 0, searchResult);
-      map.fitBounds(bbox, {
-      padding: 100
-    });
-  });
+  }
 }
 
 function getBbox(sortedFeats, storeIdentifier, searchResult) {

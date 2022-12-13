@@ -1,3 +1,5 @@
+"use strict"
+
 mapboxgl.accessToken ="pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw";
 const map = new mapboxgl.Map({
   container: "map",
@@ -164,7 +166,7 @@ async function geojsonFetch() {
   //radio buttons to toggle layer visibility/use
   const radio1 = document.getElementById("layer-choice-1");
   radio1.addEventListener('click', () => {
-    currentFeature = map.getLayer("elementarySchools");
+    currentFeature = "elementry-sc-layer";
     const visibility = map.getLayoutProperty(
       currentFeature,
       'visibility'
@@ -174,9 +176,7 @@ async function geojsonFetch() {
     // if it is currently visible, after the clicking, it will be turned off.
     if (visibility === 'visible') {
       map.setLayoutProperty(currentFeature, 'visibility', 'none');
-      this.className = '';
     } else { //otherise, it will be turned on.
-      this.className = 'active';
       map.setLayoutProperty(
           currentFeature,
           'visibility',
@@ -187,16 +187,14 @@ async function geojsonFetch() {
 
   const radio2 = document.getElementById("layer-choice-2");
   radio2.addEventListener('click', () => {
-    currentFeature = map.getLayer("middleSchools");
+    currentFeature = "middle-sc-layer";
     const visibility = map.getLayoutProperty(
       currentFeature,
       'visibility'
     );
     if (visibility === 'visible') {
       map.setLayoutProperty(currentFeature, 'visibility', 'none');
-      this.className = '';
     } else {
-      this.className = 'active';
       map.setLayoutProperty(
           currentFeature,
           'visibility',
@@ -207,16 +205,14 @@ async function geojsonFetch() {
 
   const radio3 = document.getElementById("layer-choice-3");
   radio3.addEventListener('click', () => {
-    currentFeature = map.getLayer("highSchools");
+    currentFeature = "high-sc-layer";
     const visibility = map.getLayoutProperty(
       currentFeature,
       'visibility'
     );
     if (visibility === 'visible') {
       map.setLayoutProperty(currentFeature, 'visibility', 'none');
-      this.className = '';
     } else {
-      this.className = 'active';
       map.setLayoutProperty(
           currentFeature,
           'visibility',
@@ -227,16 +223,14 @@ async function geojsonFetch() {
 
   const radio4 = document.getElementById("layer-choice-4");
   radio4.addEventListener('click', () => {
-    currentFeature = map.getLayer("libraries");
+    currentFeature = "libraries-layer"
     const visibility = map.getLayoutProperty(
       currentFeature,
       'visibility'
     );
     if (visibility === 'visible') {
       map.setLayoutProperty(currentFeature, 'visibility', 'none');
-      this.className = '';
     } else {
-      this.className = 'active';
       map.setLayoutProperty(
           currentFeature,
           'visibility',

@@ -32,11 +32,12 @@ h3 {
 }
 
 #user-inputs {
+    gap: 48px;
     height: 80px;
     width: 100%
 }
 
-#input-item {
+.input-item {
     display: flex;
     flex-direction: column;
     justify-content: left;

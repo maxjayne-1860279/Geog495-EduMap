@@ -151,7 +151,7 @@ async function geojsonFetch() {
 
   map.addLayer({
     id: "libraries-layer",
-    type: "point",
+    type: "symbol",
     source: "libraries",
   });
 

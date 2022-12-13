@@ -99,8 +99,8 @@ async function geojsonFetch() {
         // });
     });
   });
-
-   function addSchoolLayer(id, source, imageUrl) {
+   
+  function addSchoolLayer(id, source, imageUrl) {
     map.loadImage(imageUrl, (err, image) => {
       const imageCls = "image-class" + Math.floor(Math.random() * 1000);
       map.addImage(imageCls, image);
@@ -240,7 +240,7 @@ async function geojsonFetch() {
       );
     }
   });
-
+}
 
 //  function addMarkers(currLayer, geocoder) {
 //    for (const marker of currLayer.features) {
@@ -381,5 +381,4 @@ function createPopUp(currentFeature) {
   .setLngLat(currentFeature.geometry.coordinates)
   .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
   .addTo(map);
-}
 }

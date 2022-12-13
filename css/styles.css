@@ -80,48 +80,49 @@ h3 {
     width: 400px;
 } */
 
-/* the style of the layer control menu */
-#menu {
-    background: #fff;
-    z-index: 1;
-    top: 10px;
-    border-radius: 3px;
-    width: 120px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    font-family: 'Open Sans', sans-serif;
+.listings {
+height: 100%;
+overflow: auto;
+padding-bottom: 60px;
 }
 
-/* each layer on the menu */
-#menu a {
-    font-size: 13px;
-    color: #404040;
-    display: block;
-    margin: 0;
-    padding: 0;
-    padding: 10px;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-    text-align: center;
+.listings .item {
+border-bottom: 1px solid #eee;
+padding: 10px;
+text-decoration: none;
 }
 
-/* the last item of the layer items will not include a seperator */
-#menu a:last-child {
-    border: none;
+.listings .item:last-child { border-bottom: none; }
+
+.listings .item .title {
+display: block;
+color: #00853e;
+font-weight: 700;
 }
 
-/* change color and background color while a pointer is on an hybrid link. */
-#menu a:hover {
-    background-color: #f8f8f8;
-    color: #404040;
+.listings .item .title small { font-weight: 400; }
+
+.listings .item.active .title,
+.listings .item .title:hover { color: #8cc63f; }
+
+.listings .item.active {
+background-color: #f8f8f8;
 }
 
-#menu a.active {
-    background-color: #3887be;
-    color: #ffffff;
+::-webkit-scrollbar {
+width: 3px;
+height: 3px;
+border-left: 0;
+background: rgba(0, 0, 0, 0.1);
 }
 
-#menu a.active:hover {
-    background: #3074a4;
+::-webkit-scrollbar-track {
+background: none;
+}
+
+::-webkit-scrollbar-thumb {
+background: #00853e;
+border-radius: 0;
 }
 
 #geocode {

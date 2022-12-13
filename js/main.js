@@ -280,14 +280,14 @@ function createGeoJson() {
 }
 
 function buildLocationList(currentFeature) {
-  for (const currentFeature of currentFeature.features) {
+  for (const cLayer of map.getLayer(currentFeature).features) {
 
       /* Add a new listing section to the sidebar. */
       const listings = document.getElementById('listings');
       const listing = listings.appendChild(document.createElement('div'));
 
       /* Assign a unique `id` to the listing. */
-      listing.id = `listing-${currentFeature.properties.id}`;
+      listing.id = `listing-${cLayer.properties.id}`;
 
       /* Assign the `item` class to each listing for styling. */
       listing.className = 'item';
@@ -296,18 +296,18 @@ function buildLocationList(currentFeature) {
       const link = listing.appendChild(document.createElement('a'));
       link.href = '#';
       link.className = 'title';
-      link.id = `link-${currentFeature.properties.id}`;
-      link.innerHTML = `${currentFeature.properties.Name}`;
+      link.id = `link-${cLayer.properties.id}`;
+      link.innerHTML = `${cLayer.properties.Name}`;
       
       /* Add details to the individual listing. */
       const details = listing.appendChild(document.createElement('div'));
-      details.innerHTML = `${currentFeature.properties.Address}`;
-      if (currentFeature.properties.Phone) {
-          details.innerHTML += ` &middot; ${currentFeature.properties.Phone}`;
+      details.innerHTML = `${cLayer.properties.Address}`;
+      if (cLayer.properties.Phone) {
+          details.innerHTML += ` &middot; ${cLayer.properties.Phone}`;
       }
-      if (currentFeature.properties.distance) {
+      if (cLayer.properties.distance) {
           const roundedDistance =
-          Math.round(currentFeature.properties.distance * 100) / 100;
+          Math.round(cLayer.properties.distance * 100) / 100;
           details.innerHTML += `<div><strong>${roundedDistance} miles away</strong></div>`;
       }
    
@@ -319,7 +319,7 @@ function buildLocationList(currentFeature) {
       * 4. Highlight listing in sidebar (and remove highlight for all other listings)
       **/
       link.addEventListener('click', function () {
-          for (const feature of currentFeature.features) {
+          for (const feature of map.getLayer(currentFeature).features) {
               if (this.id === `link-${feature.properties.id}`) {
                   flyToSchool(feature);
                   createPopUp(feature);

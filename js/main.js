@@ -52,7 +52,7 @@ async function geojsonFetch() {
         data: schools
     });
 
-    map.addSource("elementry-sc", {
+    map.addSource("elementary-sc", {
       type: "geojson",
       data: { type: "FeatureCollection", features: elementarySchools },
     });
@@ -64,7 +64,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: { type: "FeatureCollection", features: highSchools },
     });
-    addSchoolLayer("elementry-sc-layer", "elementry-sc", "img/elementary_school.png");
+    addSchoolLayer("elementary-sc-layer", "elementary-sc", "img/elementary_school.png");
     addSchoolLayer("middle-sc-layer", "middle-sc", "img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "img/high_school.png");
     map.addControl(geocoder, 'top-right');
@@ -117,6 +117,7 @@ async function geojsonFetch() {
         layout: {
           "icon-image": imageCls,
           "icon-size": 0.03,
+          visibility: "none",
         },
       });
     });
@@ -166,78 +167,47 @@ async function geojsonFetch() {
   //radio buttons to toggle layer visibility/use
   const radio1 = document.getElementById("layer-choice-1");
   radio1.addEventListener('click', () => {
-    currentFeature = "elementry-sc-layer";
-    const visibility = map.getLayoutProperty(
-      currentFeature,
-      'visibility'
-    );
-
-    // Toggle layer visibility by changing the layout object's visibility property.
-    // if it is currently visible, after the clicking, it will be turned off.
-    if (visibility === 'visible') {
-      map.setLayoutProperty(currentFeature, 'visibility', 'none');
-    } else { //otherise, it will be turned on.
-      map.setLayoutProperty(
-          currentFeature,
-          'visibility',
-          'visible'
-      );
-    }
+    toggleLayerVisibility();
+    currentFeature = "elementary-sc-layer";
+    toggleLayerVisibility();
   });
 
   const radio2 = document.getElementById("layer-choice-2");
   radio2.addEventListener('click', () => {
+    toggleLayerVisibility();
     currentFeature = "middle-sc-layer";
-    const visibility = map.getLayoutProperty(
-      currentFeature,
-      'visibility'
-    );
-    if (visibility === 'visible') {
-      map.setLayoutProperty(currentFeature, 'visibility', 'none');
-    } else {
-      map.setLayoutProperty(
-          currentFeature,
-          'visibility',
-          'visible'
-      );
-    }
+    toggleLayerVisibility();
   });
 
   const radio3 = document.getElementById("layer-choice-3");
   radio3.addEventListener('click', () => {
+    toggleLayerVisibility();
     currentFeature = "high-sc-layer";
-    const visibility = map.getLayoutProperty(
-      currentFeature,
-      'visibility'
-    );
-    if (visibility === 'visible') {
-      map.setLayoutProperty(currentFeature, 'visibility', 'none');
-    } else {
-      map.setLayoutProperty(
-          currentFeature,
-          'visibility',
-          'visible'
-      );
-    }
+    toggleLayerVisibility();
   });
 
   const radio4 = document.getElementById("layer-choice-4");
   radio4.addEventListener('click', () => {
+    toggleLayerVisibility();
     currentFeature = "libraries-layer"
-    const visibility = map.getLayoutProperty(
-      currentFeature,
-      'visibility'
-    );
-    if (visibility === 'visible') {
-      map.setLayoutProperty(currentFeature, 'visibility', 'none');
-    } else {
-      map.setLayoutProperty(
-          currentFeature,
-          'visibility',
-          'visible'
-      );
-    }
+    toggleLayerVisibility();
   });
+}
+
+function toggleLayerVisibility() {
+  const visibility = map.getLayoutProperty(
+    currentFeature,
+    'visibility'
+  );
+  if (visibility === 'visible') {
+    map.setLayoutProperty(currentFeature, 'visibility', 'none');
+  } else {
+    map.setLayoutProperty(
+        currentFeature,
+        'visibility',
+        'visible'
+    );
+  }
 }
 
 //  function addMarkers(currLayer, geocoder) {

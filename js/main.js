@@ -76,14 +76,15 @@ async function geojsonFetch() {
       const options = { units: 'miles' };
 
       const currentLayer = map.getLayer(currentFeature);
-      for (const feature of map.querySourceFeatures(sourceName)) {
+      let currentFeatures = map.querySourceFeatures(sourceName)
+      for (const feature of currentFeatures) {
         feature.properties.distance = turf.distance(
         searchResult,
         feature.geometry,
         options
         );
       }
-      currentFeature.features.sort((a, b) => {
+      currentFeatures.sort((a, b) => {
         if (a.properties.distance > b.properties.distance) {
           return 1;
           }
@@ -97,9 +98,9 @@ async function geojsonFetch() {
       listings.removeChild(listings.firstChild);
       }
       buildLocationList(currentFeature);
-      createPopUp(currentFeature.features[0]);
+      // createPopUp(currentFeatures);
       const activeListing = document.getElementById(
-        `listing-${currentFeature.features[0].properties.id}`
+        `listing-${currentFeatures[0].properties.id}`
         );
         activeListing.classList.add('active');
         // const bbox = getBbox(currentFeature, 0, searchResult);
@@ -283,7 +284,9 @@ function createGeoJson() {
 }
 
 function buildLocationList(currentFeature) {
-  for (const cLayer of map.getLayer(currentFeature).features) {
+  const sourceName = currentFeature.substring(0, currentFeature.length - 6);
+  let currentFeatures = map.querySourceFeatures(sourceName);
+  for (const cLayer of currentFeatures) {
 
       /* Add a new listing section to the sidebar. */
       const listings = document.getElementById('listings');
@@ -322,17 +325,20 @@ function buildLocationList(currentFeature) {
       * 4. Highlight listing in sidebar (and remove highlight for all other listings)
       **/
       link.addEventListener('click', function () {
-          for (const feature of map.getLayer(currentFeature).features) {
-              if (this.id === `link-${feature.properties.id}`) {
-                  flyToSchool(feature);
-                  createPopUp(feature);
-              }
-          }
-          const activeItem = document.getElementsByClassName('active');
-          if (activeItem[0]) {
-              activeItem[0].classList.remove('active');
-          }
-          this.parentNode.classList.add('active');
+        const sourceName = currentFeature.substring(0, currentFeature.length - 6);
+        let currentFeatures = map.querySourceFeatures(sourceName);
+        for (const feature of currentFeatures) {
+          console.log(feature);
+            if (this.id === `link-${feature.properties.id}`) {
+                flyToSchool(feature);
+                createPopUp(feature);
+            }
+        }
+        const activeItem = document.getElementsByClassName('active');
+        if (activeItem[0]) {
+            activeItem[0].classList.remove('active');
+        }
+        this.parentNode.classList.add('active');
       });
   }
 }
@@ -344,12 +350,11 @@ function flyToSchool(currentFeature) {
   });
 }
 
-function createPopUp(currentFeature) {
+function createPopUp(currentFeatures) {
   const popUps = document.getElementsByClassName('mapboxgl-popup');
   if (popUps[0]) popUps[0].remove();
-   
   const popup = new mapboxgl.Popup({ closeOnClick: false })
-  .setLngLat(currentFeature.geometry.coordinates)
+  .setLngLat(currentFeature["_geometry"].coordinates)
   .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
   .addTo(map);
 }

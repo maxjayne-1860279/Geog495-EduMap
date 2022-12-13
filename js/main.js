@@ -70,10 +70,13 @@ async function geojsonFetch() {
     map.addControl(geocoder, 'top-right');
 
     geocoder.on("result", (event) => {
-      map.getSource(currentFeature).setData(event.result.geometry);
+      const sourceName = currentFeature.substring(0, currentFeature.length - 6);
+      map.getSource(sourceName).setData(event.result.geometry);
       const searchResult = event.result.geometry;
       const options = { units: 'miles' };
-      for (const feature of currentFeature.features) {
+
+      const currentLayer = map.getLayer(currentFeature);
+      for (const feature of map.querySourceFeatures(sourceName)) {
         feature.properties.distance = turf.distance(
         searchResult,
         feature.geometry,

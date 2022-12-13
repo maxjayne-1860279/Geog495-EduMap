@@ -15,6 +15,10 @@ const geocoder = new MapboxGeocoder({
   bbox: [-124.915070, 45.481431, -116.708878 , 49.049332],
 });
 
+window.addEventListener("load", function initialize() {
+  currentFeature = document.querySelector("input[type=radio]:checked").value;
+});
+
 async function geojsonFetch() {
   let response, counties, districts, libraries, schools;
   response = await fetch("assets/counties.geojson");

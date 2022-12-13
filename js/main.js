@@ -58,9 +58,9 @@ async function geojsonFetch() {
       type: "geojson",
       data: { type: "FeatureCollection", features: highSchools },
     });
-    addSchoolLayer("elementry-sc-layer", "elementry-sc", "../img/elementary_school.png");
-    addSchoolLayer("middle-sc-layer", "middle-sc", "../img/middle_school.png");
-    addSchoolLayer("high-sc-layer", "high-sc", "../img/high_school.png");
+    addSchoolLayer("elementry-sc-layer", "elementry-sc", "img/elementary_school.png");
+    addSchoolLayer("middle-sc-layer", "middle-sc", "img/middle_school.png");
+    addSchoolLayer("high-sc-layer", "high-sc", "img/high_school.png");
     map.addControl(geocoder, 'top-right');
 
     geocoder.on("result", (event) => {

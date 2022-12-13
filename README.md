@@ -2,7 +2,7 @@
 
 *Group BB2: Trang Ha, Weilin Wang, Elliot Schumacher, Maxwell Jayne*
 
-[Data Preparation](https://maxjayne-1860279.github.io/Geog495-EduMap/DataPrep.html) <br></br>
+[Data Preparation](https://maxjayne-1860279.github.io/Geog495-EduMap/DataPrep.html) <br>
 [URL](https://maxjayne-1860279.github.io/Geog495-EduMap/index.html)
   
 &emsp;The purpose of our project is to focus on education in Washington state. Education is a critical component of a child's development, providing them with the knowledge, skills, and opportunities they need to grow into successful and productive members of society. Unfortunately, not all children have access to the same level of education or educational resources equally, leading to disparities in educational opportunities and outcomes. 

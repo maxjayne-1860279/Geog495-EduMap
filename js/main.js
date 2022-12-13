@@ -6,6 +6,8 @@ const map = new mapboxgl.Map({
   center: [-122, 47],
 });
 
+let currentFeature;
+
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   mapboxgl: mapboxgl,
@@ -155,72 +157,90 @@ async function geojsonFetch() {
     source: "libraries",
   });
 
-  // Menu and sub menu compile on idle and respond to user event trigger:
-  //
-  // After the last frame rendered before the map enters an "idle" state.
-  map.on('idle', () => {
-    // If these two layers were not added to the map, abort
-    if (!map.getLayer('elementarySchools') || !map.getLayer('middleSchools') || !map.getLayer('highSchools') || !map.getLayer('libraries')) {
-        return;
+  //radio buttons to toggle layer visibility/use
+  const radio1 = document.getElementById("layer-choice-1");
+  radio1.addEventListener('click', () => {
+    currentFeature = map.getLayer("elementarySchools");
+    const visibility = map.getLayoutProperty(
+      currentFeature,
+      'visibility'
+    );
+
+    // Toggle layer visibility by changing the layout object's visibility property.
+    // if it is currently visible, after the clicking, it will be turned off.
+    if (visibility === 'visible') {
+      map.setLayoutProperty(currentFeature, 'visibility', 'none');
+      this.className = '';
+    } else { //otherise, it will be turned on.
+      this.className = 'active';
+      map.setLayoutProperty(
+          currentFeature,
+          'visibility',
+          'visible'
+      );
     }
-
-    // Enumerate ids of the layers.
-    const toggleableLayerIds = ['elementarySchools', 'middleSchools', 'highSchools', 'libraries'];
-
-    // Set up the corresponding toggle button for each layer.
-    for (const id of toggleableLayerIds) {
-        // Skip layers that already have a button set up.
-        if (document.getElementById(id)) {
-            continue;
-        }
-
-        // Create a link.
-        const link = document.createElement('a');
-        link.id = id;
-        link.href = '#';
-        link.textContent = id;
-        link.className = 'inactive';
-
-        // Show or hide layer when the toggle is clicked.
-        link.onclick = function (e) {
-            const clickedLayer = this.textContent;
-            // preventDefault() tells the user agent that if the event does not get explicitly handled, 
-            // its default action should not be taken as it normally would be.
-            e.preventDefault();
-            // The stopPropagation() method prevents further propagation of the current event in the capturing 
-            // and bubbling phases. It does not, however, prevent any default behaviors from occurring; 
-            // for instance, clicks on links are still processed. If you want to stop those behaviors, 
-            // see the preventDefault() method.
-            e.stopPropagation();
-
-            const visibility = map.getLayoutProperty(
-                clickedLayer,
-                'visibility'
-            );
-
-            // Toggle layer visibility by changing the layout object's visibility property.
-            // if it is currently visible, after the clicking, it will be turned off.
-            if (visibility === 'visible') {
-                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                this.className = '';
-            } else { //otherise, it will be turned on.
-                this.className = 'active';
-                map.setLayoutProperty(
-                    clickedLayer,
-                    'visibility',
-                    'visible'
-                );
-            }
-        };
-
-        // in the menu place holder, insert the layer links.
-        const layers = document.getElementById('menu');
-        layers.appendChild(link);
-      }
   });
 
-  let currentFeature = document.getElementsByClassName('active');
-}
+  const radio2 = document.getElementById("layer-choice-2");
+  radio2.addEventListener('click', () => {
+    currentFeature = map.getLayer("middleSchools");
+    const visibility = map.getLayoutProperty(
+      currentFeature,
+      'visibility'
+    );
+    if (visibility === 'visible') {
+      map.setLayoutProperty(currentFeature, 'visibility', 'none');
+      this.className = '';
+    } else {
+      this.className = 'active';
+      map.setLayoutProperty(
+          currentFeature,
+          'visibility',
+          'visible'
+      );
+    }
+  });
+
+  const radio3 = document.getElementById("layer-choice-3");
+  radio3.addEventListener('click', () => {
+    currentFeature = map.getLayer("highSchools");
+    const visibility = map.getLayoutProperty(
+      currentFeature,
+      'visibility'
+    );
+    if (visibility === 'visible') {
+      map.setLayoutProperty(currentFeature, 'visibility', 'none');
+      this.className = '';
+    } else {
+      this.className = 'active';
+      map.setLayoutProperty(
+          currentFeature,
+          'visibility',
+          'visible'
+      );
+    }
+  });
+
+  const radio4 = document.getElementById("layer-choice-4");
+  radio4.addEventListener('click', () => {
+    currentFeature = map.getLayer("libraries");
+    const visibility = map.getLayoutProperty(
+      currentFeature,
+      'visibility'
+    );
+    if (visibility === 'visible') {
+      map.setLayoutProperty(currentFeature, 'visibility', 'none');
+      this.className = '';
+    } else {
+      this.className = 'active';
+      map.setLayoutProperty(
+          currentFeature,
+          'visibility',
+          'visible'
+      );
+    }
+  });
+
 
 //  function addMarkers(currLayer, geocoder) {
 //    for (const marker of currLayer.features) {

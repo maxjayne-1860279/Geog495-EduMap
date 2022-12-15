@@ -16,9 +16,11 @@ const geocoder = new MapboxGeocoder({
   marker: true,
   bbox: [-124.915070, 45.481431, -116.708878 , 49.049332],
 });
+// map.addControl(geocoder, 'top-right');
 
 window.addEventListener("load", function initialize() {
   currentFeature = document.querySelector("input[type=radio]:checked").value;
+  document.getElementById("geocoder-container").appendChild(geocoder.onAdd(map));
 });
 
 async function geojsonFetch() {
@@ -67,7 +69,6 @@ async function geojsonFetch() {
     addSchoolLayer("elementary-sc-layer", "elementary-sc", "img/elementary_school.png");
     addSchoolLayer("middle-sc-layer", "middle-sc", "img/middle_school.png");
     addSchoolLayer("high-sc-layer", "high-sc", "img/high_school.png");
-    map.addControl(geocoder, 'top-right');
 
     geocoder.on("result", (event) => {
       const sourceName = currentFeature.substring(0, currentFeature.length - 6);

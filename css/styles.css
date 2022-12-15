@@ -48,6 +48,13 @@ h3 {
     
 }
 
+#geocoder-container {
+    background-color: lightblue;
+    width: 360px;
+    height: 36px;
+    border-radius: 8px;
+}
+
 #map {
     position: absolute;
     top: 160px;
@@ -123,14 +130,6 @@ background: none;
 ::-webkit-scrollbar-thumb {
 background: #00853e;
 border-radius: 0;
-}
-
-#geocode {
-    top: 0;
-    right: 0;
-    height: 100px;
-    margin-top: 20px;
-    width: 250px;
 }
 
 .mapboxgl-popup {
@@ -220,18 +219,11 @@ border-radius: 0;
 
 
 .mapboxgl-ctrl-geocoder {
-    border-radius: 0;
-    position: relative;
-    top: 0;
-    width: 800px;
+    border-radius: 8px;
+    height: 100%;
+    width: 100%;
     margin-top: 0;
-    border: 0;
-  }
-
-  .mapboxgl-ctrl-geocoder > div {
-    min-width: 100%;
-    margin-left: 0;
-  }
+}
 
 @media screen and (max-width: 600px) {
     #intro {

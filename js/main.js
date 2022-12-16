@@ -180,7 +180,8 @@ async function geojsonFetch() {
         options
         );
       }
-      currentFeature.sort((a, b) => {
+      // console.log(currentFeature);
+      currentFeature.features.sort((a, b) => {
         if (a.properties.distance > b.properties.distance) {
           return 1;
           }
@@ -340,10 +341,12 @@ function flyToSchool(currentFeature) {
 }
 
 function createPopUp(currentFeatures) {
+  // console.log(currentFeatures);
   const popUps = document.getElementsByClassName('mapboxgl-popup');
   if (popUps[0]) popUps[0].remove();
+  // console.log(currentFeature);
   const popup = new mapboxgl.Popup({ closeOnClick: false })
-  .setLngLat(currentFeature["_geometry"].coordinates)
-  .setHTML(`<h4>${currentFeature.properties.Address}</h4>`)
+  .setLngLat(currentFeatures.geometry.coordinates)
+  .setHTML(`<h4>${currentFeatures.properties.Address}</h4>`)
   .addTo(map);
 }

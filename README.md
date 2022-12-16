@@ -5,6 +5,7 @@
 * [**Education Mapping Website**](https://maxjayne-1860279.github.io/Geog495-EduMap/index.html) <br>
 * [Data Preparation](https://maxjayne-1860279.github.io/Geog495-EduMap/DataPrep_updated.html) <br>
 * [Proposal](https://github.com/maxjayne-1860279/Geog495-EduMap/blob/main/proposal.md) <br>
+* [Final Presentation](https://docs.google.com/presentation/d/1QWupCyWxfkEE9Vr25DdS7fsMp4Y3iR5a8GRYbjKidh8/edit?usp=sharing)<br>
   
 &emsp;The purpose of our project is to focus on education in Washington state. Education is a critical component of a child's development, providing them with the knowledge, skills, and opportunities they need to grow into successful and productive members of society. Unfortunately, not all children have access to the same level of education or educational resources equally, leading to disparities in educational opportunities and outcomes. 
   

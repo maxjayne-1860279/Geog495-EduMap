@@ -9,6 +9,7 @@ const map = new mapboxgl.Map({
 });
 
 let currentFeature;
+let currentID;
 
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
@@ -19,73 +20,167 @@ const geocoder = new MapboxGeocoder({
 // map.addControl(geocoder, 'top-right');
 
 window.addEventListener("load", function initialize() {
-  currentFeature = document.querySelector("input[type=radio]:checked").value;
+  // currentFeature = document.querySelector("input[type=radio]:checked").value;
   document.getElementById("geocoder-container").appendChild(geocoder.onAdd(map));
 });
 
 async function geojsonFetch() {
-  let response, counties, districts, libraries, schools;
+  let response, counties, districts, libraries, elementary, middle, high;
   response = await fetch("assets/counties.geojson");
   counties = await response.json();
   response = await fetch("assets/districts.geojson");
   districts = await response.json();
   response = await fetch("assets/libraries2.geojson");
   libraries = await response.json();
-  response = await fetch("assets/schools2.geojson");
-  schools = await response.json();
+  response = await fetch("assets/elementary.geojson");
+  elementary = await response.json();
+  response = await fetch("assets/middle.geojson");
+  middle = await response.json();
+  response = await fetch("assets/high.geojson");
+  high = await response.json();
 
+  // Generate unique ids used for assigning listings
+  // arbitrary addition for unique values
   libraries.features.forEach(function (library, i) {
     library.properties.id = i;
   });  
-  let elementarySchools = schools.features.filter(
-    (sc) => sc.properties.Grades === "Elementary School"
-  );
-  let middleSchools = schools.features.filter(
-    (sc) => sc.properties.Grades === "Middle School"
-  );
-  let highSchools = schools.features.filter(
-    (sc) => sc.properties.Grades === "High School"
-  );
+  elementary.features.forEach(function (elem, i) {
+    elem.properties.id = i + 100000;
+  });  
+  middle.features.forEach(function (mid, i) {
+    mid.properties.id = i + 200000;
+  });  
+  high.features.forEach(function (hg, i) {
+    hg.properties.id = i + 300000;
+  });  
 
   map.on("load", function loadingData() {
+    
+    map.addSource("counties", {
+      type: "geojson",
+      data: counties,
+    });
+    map.addLayer({
+      id: "counties-layer",
+      type: "line",
+      source: "counties",
+      paint: {
+        "line-color": "#4a1486",
+        "line-opacity": 0.4,
+        "line-width": 2,
+      }
+    });
+  
+    map.addSource("districts", {
+      type: "geojson",
+      data: districts,
+    });
+    map.addLayer({
+      id: "districts-layer",
+      type: "line",
+      source: "districts",
+      paint: {
+        "line-color": "#6a51a3",
+        "line-opacity": 0.4,
+      }
+    });
+  
+    map.addSource("libraries", {
+      type: "geojson",
+      data: libraries,
+    });
+    map.loadImage('../img/library.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('lib')) map.addImage('lib', image);
+    });
+    map.addLayer({
+      id: "libraries-layer",
+      type: "symbol",
+      source: "libraries",
+      'layout': {
+        'icon-image': 'lib',
+        'icon-size': 0.1,
+        'visibility': 'visible'
+      }
+    });
 
-    map.addSource("schools", {
-        type: "geojson",
-        data: schools
+    map.addSource("elementary", {
+      type: "geojson",
+      data: elementary,
+    });
+    map.loadImage('../img/elementary_school.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('elem')) map.addImage('elem', image);
+    });
+    map.addLayer({
+      id: "elementary-layer",
+      type: "symbol",
+      source: "elementary",
+      layout: {
+        'icon-image': 'elem',
+        'icon-size': 0.1,
+        'visibility': 'none'
+      },
     });
 
-    map.addSource("elementary-sc", {
+    map.addSource("middle", {
       type: "geojson",
-      data: { type: "FeatureCollection", features: elementarySchools },
+      data: middle,
     });
-    map.addSource("middle-sc", {
+    map.loadImage('../img/middle_school.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('mid')) map.addImage('mid', image);
+    });
+    map.addLayer({
+      id: "middle-layer",
+      type: "symbol",
+      source: "middle",
+      layout: {
+        'icon-image': 'mid',
+        'icon-size': 0.1,
+        'visibility': 'none'
+      }
+    });
+
+    map.addSource("high", {
       type: "geojson",
-      data: { type: "FeatureCollection", features: middleSchools },
+      data: high,
     });
-    map.addSource("high-sc", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: highSchools },
+    map.loadImage('../img/high_school.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('hg')) map.addImage('hg', image);
     });
-    addSchoolLayer("elementary-sc-layer", "elementary-sc", "img/elementary_school.png");
-    addSchoolLayer("middle-sc-layer", "middle-sc", "img/middle_school.png");
-    addSchoolLayer("high-sc-layer", "high-sc", "img/high_school.png");
+    map.addLayer({
+      id: "high-layer",
+      type: "symbol",
+      source: "high",
+      layout: {
+        'icon-image': 'hg',
+        'icon-size': 0.1,
+        'visibility': 'none'
+      }
+    });
+
+    currentFeature = libraries;
+    currentID = "libraries-layer";
+    buildLocationList(currentFeature);
 
     geocoder.on("result", (event) => {
-      const sourceName = currentFeature.substring(0, currentFeature.length - 6);
-      map.getSource(sourceName).setData(event.result.geometry);
+      // const sourceName = currentFeature;
+      // map.getSource(sourceName).setData(event.result.geometry);
       const searchResult = event.result.geometry;
       const options = { units: 'miles' };
 
-      const currentLayer = map.getLayer(currentFeature);
-      let currentFeatures = map.querySourceFeatures(sourceName)
-      for (const feature of currentFeatures) {
+      // const currentLayer = map.getLayer(currentFeature);
+      // let currentFeatures = map.querySourceFeatures(sourceName)
+      for (const feature of currentFeature.features) {
         feature.properties.distance = turf.distance(
         searchResult,
         feature.geometry,
         options
         );
       }
-      currentFeatures.sort((a, b) => {
+      currentFeature.sort((a, b) => {
         if (a.properties.distance > b.properties.distance) {
           return 1;
           }
@@ -100,10 +195,10 @@ async function geojsonFetch() {
       }
       buildLocationList(currentFeature);
       // createPopUp(currentFeatures);
-      const activeListing = document.getElementById(
-        `listing-${currentFeatures[0].properties.id}`
-        );
-        activeListing.classList.add('active');
+      // const activeListing = document.getElementById(
+      //  `listing-${currentFeature[0].properties.id}`
+      //  );
+      //  activeListing.classList.add('active');
         // const bbox = getBbox(currentFeature, 0, searchResult);
         // map.fitBounds(bbox, {
         // padding: 100
@@ -111,183 +206,66 @@ async function geojsonFetch() {
     });
   });
    
-  function addSchoolLayer(id, source, imageUrl) {
-    map.loadImage(imageUrl, (err, image) => {
-      const imageCls = "image-class" + Math.floor(Math.random() * 1000);
-      map.addImage(imageCls, image);
-      map.addLayer({
-        id: id,
-        type: "symbol",
-        source: source,
-        layout: {
-          "icon-image": imageCls,
-          "icon-size": 0.03,
-          visibility: "none",
-        },
-      });
-    });
-  }
-
-  map.addSource("counties", {
-    type: "geojson",
-    data: counties,
-  });
-
-  map.addLayer({
-    id: "counties-layer",
-    type: "line",
-    source: "counties",
-    paint: {
-      "line-color": "#FFFFFF",
-      "line-opacity": 1,
-    },
-  });
-
-  map.addSource("districts", {
-    type: "geojson",
-    data: districts,
-  });
-
-  map.addLayer({
-    id: "districts-layer",
-    type: "line",
-    source: "districts",
-    paint: {
-      "line-color": "#0080ff",
-      "line-opacity": 0.4,
-    },
-  });
-
-  map.addSource("libraries", {
-    type: "geojson",
-    data: libraries,
-  });
-
-  map.addLayer({
-    id: "libraries-layer",
-    type: "symbol",
-    source: "libraries",
-  });
-
   //radio buttons to toggle layer visibility/use
   const radio1 = document.getElementById("layer-choice-1");
   radio1.addEventListener('click', () => {
     toggleLayerVisibility();
-    currentFeature = "elementary-sc-layer";
+    currentFeature = elementary;
+    currentID = "elementary-layer";
+    const listings = document.getElementById('listings');
+      while (listings.firstChild) {
+      listings.removeChild(listings.firstChild);
+    }
+    buildLocationList(elementary);
     toggleLayerVisibility();
   });
 
   const radio2 = document.getElementById("layer-choice-2");
   radio2.addEventListener('click', () => {
     toggleLayerVisibility();
-    currentFeature = "middle-sc-layer";
+    currentFeature = middle;
+    currentID = "middle-layer";
+    const listings = document.getElementById('listings');
+      while (listings.firstChild) {
+      listings.removeChild(listings.firstChild);
+    }
+    buildLocationList(middle);
     toggleLayerVisibility();
   });
 
   const radio3 = document.getElementById("layer-choice-3");
   radio3.addEventListener('click', () => {
     toggleLayerVisibility();
-    currentFeature = "high-sc-layer";
+    currentFeature = high;
+    currentID = "high-layer";
+    const listings = document.getElementById('listings');
+      while (listings.firstChild) {
+      listings.removeChild(listings.firstChild);
+    }
+    buildLocationList(high);
     toggleLayerVisibility();
   });
 
   const radio4 = document.getElementById("layer-choice-4");
   radio4.addEventListener('click', () => {
     toggleLayerVisibility();
-    currentFeature = "libraries-layer"
+    currentFeature = libraries;
+    currentID = "libraries-layer";
+    const listings = document.getElementById('listings');
+      while (listings.firstChild) {
+      listings.removeChild(listings.firstChild);
+    }
+    buildLocationList(libraries);
     toggleLayerVisibility();
   });
 }
 
-function toggleLayerVisibility() {
-  const visibility = map.getLayoutProperty(
-    currentFeature,
-    'visibility'
-  );
-  if (visibility === 'visible') {
-    map.setLayoutProperty(currentFeature, 'visibility', 'none');
-  } else {
-    map.setLayoutProperty(
-        currentFeature,
-        'visibility',
-        'visible'
-    );
-  }
-}
-
-//  function addMarkers(currLayer, geocoder) {
-//    for (const marker of currLayer.features) {
-//      const el = document.createElement("div");
-//      el.id = `marker-${marker.properties.id}`;
-//      el.className = "marker";
-//      new mapboxgl.Marker(el, { offset: [0, -23] })
-//        .setLngLat(marker.geometry.coordinates)
-//        .addTo(map);
-//      el.addEventListener('click', (e) => {
-//        flyToSchool(marker);
-//        createPopUp(marker);
-//        const activeItem = document.getElementsByClassName('active');
-//        e.stopPropagation();
-//        if (activeItem[0]) {
-//          activeItem[0].classList.remove('active');
-//       }
-//        const listing = document.getElementById(
-//          `listing-${marker.properties.id}`
-//       );
-//      listing.classList.add('active');
-//      });
-//    }
-//  }
-
-//  function getBbox(sortedFeats, storeIdentifier, searchResult) {
-//    const lats = [
-//      sortedFeats.features[storeIdentifier].geometry.coordinates[1],
-//      searchResult.coordinates[1]
-//    ];
-//    const lons = [
-//      sortedFeats.features[storeIdentifier].geometry.coordinates[0],
-//      searchResult.coordinates[0]
-//    ];
-//    const sortedLons = lons.sort((a, b) => {
-//      if (a > b) {
-//        return 1;
-//      }
-//      if (a.distance < b.distance) {
-//        return -1;
-//      }
-//      return 0;
-//    });
-//    const sortedLats = lats.sort((a, b) => {
-//      if (a > b) {
-//        return 1;
-//      }
-//      if (a.distance < b.distance) {
-//        return -1;
-//      }
-//      return 0;
-//   });
-//    return [
-//      [sortedLons[0], sortedLats[0]],
-//      [sortedLons[1], sortedLats[1]]
-//    ];
-//  }
-
 geojsonFetch();
-/**
- * Creates a new GeoJSON FeatureCollection object.
- * @returns an empty FeatureCollection GeoJSON object
- */
-function createGeoJson() {
-  return {
-      "type": "FeatureCollection",
-      "features": []
-  }
-}
 
 function buildLocationList(currentFeature) {
-  const sourceName = currentFeature.substring(0, currentFeature.length - 6);
-  let currentFeatures = map.querySourceFeatures(sourceName);
-  for (const cLayer of currentFeatures) {
+  // const sourceName = currentFeature;
+  // let currentFeatures = map.querySourceFeatures(sourceName);
+  for (const cLayer of currentFeature.features) {
 
       /* Add a new listing section to the sidebar. */
       const listings = document.getElementById('listings');
@@ -325,10 +303,11 @@ function buildLocationList(currentFeature) {
       * 3. Close all other popups and display popup for clicked store
       * 4. Highlight listing in sidebar (and remove highlight for all other listings)
       **/
+
       link.addEventListener('click', function () {
-        const sourceName = currentFeature.substring(0, currentFeature.length - 6);
-        let currentFeatures = map.querySourceFeatures(sourceName);
-        for (const feature of currentFeatures) {
+        // const sourceName = currentFeature.substring(0, currentFeature.length - 6);
+        // let currentFeatures = map.querySourceFeatures(sourceName);
+        for (const feature of currentFeature.features) {
           console.log(feature);
             if (this.id === `link-${feature.properties.id}`) {
                 flyToSchool(feature);
@@ -341,6 +320,15 @@ function buildLocationList(currentFeature) {
         }
         this.parentNode.classList.add('active');
       });
+  }
+}
+
+function toggleLayerVisibility() {
+  const visibility = map.getLayoutProperty(currentID, 'visibility');
+  if (visibility === 'visible') {
+    map.setLayoutProperty(currentID, 'visibility', 'none');
+  } else {
+    map.setLayoutProperty(currentID, 'visibility', 'visible');
   }
 }
 

@@ -108,7 +108,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: elementary,
     });
-    map.loadImage('../img/elementary_school.png', (error, image) => {
+    map.loadImage('img/elementary_school.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('elem')) map.addImage('elem', image);
     });
@@ -127,7 +127,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: middle,
     });
-    map.loadImage('../img/middle_school.png', (error, image) => {
+    map.loadImage('img/middle_school.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('mid')) map.addImage('mid', image);
     });
@@ -146,7 +146,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: high,
     });
-    map.loadImage('../img/high_school.png', (error, image) => {
+    map.loadImage('img/high_school.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('hg')) map.addImage('hg', image);
     });

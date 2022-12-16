@@ -29,6 +29,16 @@ h1 > span {
 
 h3 {
     margin: 0px;
+    font-weight: bolder;
+}
+
+h1, h2, h3, label {
+    font-family: "Manrope", "serif";
+}
+
+label {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 #user-inputs {
@@ -45,7 +55,32 @@ h3 {
 
 #radio-buttons {
     display: flex;
-    
+}
+
+#radio-buttons label {
+    display: inline-flex;
+    justify-content: center;
+    width: 80px;
+    padding: 8px;
+    border: solid 2px #505050;
+
+}
+
+#radio-buttons input[type="radio"] {
+    display: none;
+}
+
+#radio-buttons input[type="radio"]:checked + label {
+    background-color: #2AA3DC;
+    color: #FFFFFF;
+}
+
+#radio-buttons label:nth-child(2) {
+    border-radius: 8px 0 0 8px;
+}
+
+#radio-buttons label:last-child {
+    border-radius: 0 8px 8px 0;
 }
 
 #geocoder-container {

@@ -89,7 +89,7 @@ async function geojsonFetch() {
       type: "geojson",
       data: libraries,
     });
-    map.loadImage('../img/library.png', (error, image) => {
+    map.loadImage('img/library.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('lib')) map.addImage('lib', image);
     });
